@@ -10,13 +10,32 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/login','Backend\LoginController@getLogin');
+Route::post('/login', 'Backend\LoginController@postLogin');
+// Route::get('/nhan-su', function () {
+//     return view('admin/nhansu/ns_chamcong');
+// });
+Route::group(['prefix' => 'staff'], function () {
+    Route::get('home', "Backend\StaffController@home" );
+    Route::get('timecard', "Backend\StaffController@getTimeCard");
+    Route::post('timecard', "Backend\StaffController@postTimeCard");
+    Route::get('timecard/info/january', "Backend\StaffController@getJanuary");
+    
+
+});
+Route::group(['prefix' => 'admin/{satff_id}','middleware'=>'login'], function () {
+    Route::get('/', 'Backend\HomeController@admin'); 
+   
+});
+Route::get('editnote/{id}', ['uses'=> 'Backend\StaffController@getEditnote']);
+Route::put('/editNote/edit/{id}', "Backend\StaffController@postEditnote");
+Route::get('admin', "Backend\LoginController@login");
+// -------------------------phần vinh
 
 Route::get('/', function () {
     return view('welcome');
 });
 // ---login
-Route::match(['get', 'post'], '/login', 'Backend\AdminController@Login')->name('Auth.Login');
-Route::get('/logout', 'Backend\AdminController@Logout')->name('Auth.Logout');
 
 // User
 Route::get('/','Frontend\HomeController@index')->name('home');
